@@ -1,0 +1,22 @@
+{
+  "name": "com.sadai.sadutils",
+  "version": "0.0.0",
+  "displayName": "Sad Utils",
+  "description": "Utils package by Sad AI",
+  "unity": "2022.3",
+  "unityRelease": "36f1",
+  "documentationUrl": "https://example.com/",
+  "changelogUrl": "https://example.com/changelog.html",
+  "licensesUrl": "https://github.com/Sad-AI-dev/SadUtils_Package/blob/main/LICENSE.md",
+  "dependencies": {
+  },
+  "keywords": [
+    "Utilities",
+    "Code"
+  ],
+  "author": {
+    "name": "Arvid van den Hoogen",
+    "email": "arvidvdhoogen@gmail.com",
+    "url": "https://github.com/Sad-AI-dev"
+  }
+}

@@ -1,0 +1,18 @@
+{
+    "name": "sadai.sadutils.Editor",
+    "rootNamespace": "SadUtils.Editor",
+    "references": [
+        "GUID:1ac19e871fce99f4f8eabb42e783f30d"
+    ],
+    "includePlatforms": [
+        "Editor"
+    ],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
