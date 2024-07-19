@@ -6,9 +6,6 @@ namespace SadUtils
     {
         public static T Instance { get; private set; }
 
-        public static WaitUntil WaitForInstance => GetWaitForInstance();
-        private static WaitUntil waitForInstance;
-
         public static bool HasInstance { get; private set; }
 
         protected abstract void Awake();
@@ -24,14 +21,9 @@ namespace SadUtils
             }
         }
 
-        private static WaitUntil GetWaitForInstance()
+        public static WaitUntil WaitForInstance = new(() =>
         {
-            waitForInstance ??= new(() =>
-            {
-                return HasInstance;
-            });
-
-            return waitForInstance;
-        }
+            return HasInstance;
+        });
     }
 }
