@@ -1,8 +1,8 @@
 {
-    "name": "sadai.sadutils",
-    "rootNamespace": "SadUtils",
+    "name": "sadai.sadutils.newinput",
+    "rootNamespace": "SadUtils.NewInputSystem",
     "references": [
-        "GUID:2b51612647f54de499b824008f398210",
+        "GUID:75469ad4d38634e559750d17036d5f7c",
         "GUID:647031aa63e2e034992aaa2dff0c20dd"
     ],
     "includePlatforms": [],
@@ -11,7 +11,9 @@
     "overrideReferences": false,
     "precompiledReferences": [],
     "autoReferenced": true,
-    "defineConstraints": [],
+    "defineConstraints": [
+        "ENABLE_INPUT_SYSTEM"
+    ],
     "versionDefines": [],
     "noEngineReferences": false
 }

@@ -1,3 +1,6 @@
+using SadUtils.Data;
+using SadUtils.NewInputSystem;
+
 namespace SadUtils.Core
 {
     public static class InputProviderFactory

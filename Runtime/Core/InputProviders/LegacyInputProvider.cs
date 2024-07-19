@@ -1,3 +1,4 @@
+using SadUtils.Data;
 using UnityEngine;
 
 #if ENABLE_LEGACY_INPUT_MANAGER
