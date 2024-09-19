@@ -1,5 +1,7 @@
 #if ENABLE_INPUT_SYSTEM
 using SadUtils.NewInputSystem;
+#elif ENABLE_LEGACY_INPUT_MANAGER
+using SadUtils.LegacyInput;
 #endif
 
 using SadUtils.Types;

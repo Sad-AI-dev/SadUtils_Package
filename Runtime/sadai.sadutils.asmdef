@@ -3,6 +3,7 @@
     "rootNamespace": "SadUtils",
     "references": [
         "GUID:2b51612647f54de499b824008f398210",
+        "GUID:051119287f3d4f84cb5df91261cb8aa8",
         "GUID:84971957b7247f24598d7fa83cf9e720"
     ],
     "includePlatforms": [],
