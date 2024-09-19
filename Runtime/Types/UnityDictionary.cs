@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Linq;
 using UnityEngine;
 
-namespace SadUtils
+namespace SadUtils.Types
 {
     [Serializable]
     public class UnityDictionary<Key, Value> : IDictionary<Key, Value>, ISerializationCallbackReceiver

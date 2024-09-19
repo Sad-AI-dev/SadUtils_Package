@@ -1,13 +1,10 @@
 {
-    "name": "sadai.sadutils.Editor",
-    "rootNamespace": "SadUtils.Editor",
+    "name": "sadai.sadutils.legacyinput",
+    "rootNamespace": "SadUtils.LegacyInput",
     "references": [
-        "GUID:1ac19e871fce99f4f8eabb42e783f30d",
         "GUID:84971957b7247f24598d7fa83cf9e720"
     ],
-    "includePlatforms": [
-        "Editor"
-    ],
+    "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,
     "overrideReferences": false,

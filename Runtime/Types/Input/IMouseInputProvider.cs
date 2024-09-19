@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SadUtils.Data
+namespace SadUtils.Types
 {
     public interface IMouseInputProvider
     {

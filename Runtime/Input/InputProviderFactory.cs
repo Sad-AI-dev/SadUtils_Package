@@ -1,5 +1,8 @@
-using SadUtils.Data;
+#if ENABLE_INPUT_SYSTEM
 using SadUtils.NewInputSystem;
+#endif
+
+using SadUtils.Types;
 
 namespace SadUtils.Core
 {

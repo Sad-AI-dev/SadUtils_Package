@@ -1,6 +1,6 @@
 {
-    "name": "sadai-sadutils.data",
-    "rootNamespace": "SadUtils.Data",
+    "name": "sadai.sadutils.types",
+    "rootNamespace": "SadUtils.Types",
     "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],

@@ -1,5 +1,5 @@
 using SadUtils.Core;
-using SadUtils.Data;
+using SadUtils.Types;
 using UnityEngine;
 
 namespace SadUtils

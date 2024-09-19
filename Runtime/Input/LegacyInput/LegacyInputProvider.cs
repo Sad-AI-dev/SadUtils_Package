@@ -1,8 +1,8 @@
-using SadUtils.Data;
+#if ENABLE_LEGACY_INPUT_MANAGER
+using SadUtils.Types;
 using UnityEngine;
 
-#if ENABLE_LEGACY_INPUT_MANAGER
-namespace SadUtils.Core
+namespace SadUtils.LegacyInput
 {
     public class LegacyInputProvider : IMouseInputProvider
     {

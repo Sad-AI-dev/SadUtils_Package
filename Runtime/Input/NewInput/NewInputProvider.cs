@@ -1,5 +1,5 @@
 #if ENABLE_INPUT_SYSTEM
-using SadUtils.Data;
+using SadUtils.Types;
 using UnityEngine;
 using UnityEngine.InputSystem;
 
