@@ -1,6 +1,6 @@
 {
   "name": "com.sadai.sadutils",
-  "version": "0.0.2",
+  "version": "0.0.3",
   "displayName": "Sad Utils",
   "description": "Utils package by Sad AI",
   "unity": "2022.3",
@@ -16,5 +16,8 @@
     "name": "Arvid van den Hoogen",
     "email": "arvidvdhoogen@gmail.com",
     "url": "https://github.com/Sad-AI-dev"
+  },
+  "dependencies": {
+    "com.unity.textmeshpro": "3.0.9"
   }
 }
