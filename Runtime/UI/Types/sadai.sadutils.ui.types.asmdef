@@ -1,11 +1,7 @@
 {
-    "name": "sadai.sadutils.ui",
-    "rootNamespace": "SadUtils.UI",
-    "references": [
-        "GUID:84971957b7247f24598d7fa83cf9e720",
-        "GUID:d5f469c18a0059a4696bc051272b929c",
-        "GUID:6055be8ebefd69e48b49212b09b47b2f"
-    ],
+    "name": "sadai.sadutils.ui.types",
+    "rootNamespace": "SadUtils.UI.Types",
+    "references": [],
     "includePlatforms": [],
     "excludePlatforms": [],
     "allowUnsafeCode": false,

@@ -1,4 +1,6 @@
+using SadUtils.UI.Types;
 using System;
+using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
@@ -32,9 +34,18 @@ namespace SadUtils.UI
         [Header("Transition Settings")]
         [SerializeField] private TransitionType transitions;
 
-        // Only Shown when ColorTint or SpriteSwap is enabled.
+        // Only used when ColorTint or SpriteSwap is enabled.
         [SerializeField] private Image targetImage;
+        // Only used when Animation is enabled.
+        [SerializeField] private Animator targetAnimator;
+        // Only used when TextSwap or TextColorTint is enabled.
         [SerializeField] private TMP_Text targetText;
+
+        [Space]
+        [SerializeField] private ButtonVisualData normalVisualData;
+        [SerializeField] private ButtonVisualData highlightedVisualData;
+        [SerializeField] private ButtonVisualData pressedVisualData;
+        [SerializeField] private ButtonVisualData disabledVisualData;
 
         [Header("Events")]
         public UnityEvent OnClick;
@@ -42,7 +53,11 @@ namespace SadUtils.UI
         // Keep track of transitions.
         private HashSet<TransitionType> enabledTransitions;
 
-        // Internal State.
+        // Keep track of running coroutines
+        private Coroutine colorTransitionRoutine;
+        private Coroutine textColorTransitionRoutine;
+
+        // Internal state.
         private ButtonState state;
 
         private bool isCursorOverButton;
@@ -52,12 +67,13 @@ namespace SadUtils.UI
         private void Awake()
         {
             CompileEnabledTransitionTypes();
+            InitializeVisualData();
+
             TryFetchImage();
+            TryFetchAnimator();
             TryFetchText();
 
-            state = ButtonState.Normal;
-
-            UpdateVisuals();
+            SetState(DetermineCurrentState(), true);
         }
 
         private void CompileEnabledTransitionTypes()
@@ -73,6 +89,17 @@ namespace SadUtils.UI
             }
         }
 
+        private void InitializeVisualData()
+        {
+            if (!IsTransitionEnabled(TransitionType.Animation))
+                return;
+
+            normalVisualData.CalculateTriggerHash();
+            highlightedVisualData.CalculateTriggerHash();
+            pressedVisualData.CalculateTriggerHash();
+            disabledVisualData.CalculateTriggerHash();
+        }
+
         private void TryFetchImage()
         {
             if (!IsTransitionEnabled(TransitionType.ColorTint) &&
@@ -83,18 +110,31 @@ namespace SadUtils.UI
                 return;
 
             // No image assigned, attempt to find one.
-            targetImage = GetComponent<Image>();
-
-            // Due to the RequireComponent tag, this should be impossible.
-            // Keeping this here just in case.
-            if (ReferenceEquals(targetImage, null))
+            if (!TryGetComponent(out Image image))
                 throw new Exception("Target Image required but none found!");
+
+            targetImage = image;
+        }
+
+        private void TryFetchAnimator()
+        {
+            if (!IsTransitionEnabled(TransitionType.Animation))
+                return;
+
+            if (targetAnimator != null)
+                return;
+
+            // No animator assigned, attempt to find one.
+            if (!TryGetComponent(out Animator animator))
+                throw new Exception("Target Animator required but none found!");
+
+            targetAnimator = animator;
         }
 
         private void TryFetchText()
         {
             if (!IsTransitionEnabled(TransitionType.TextSwap) &&
-                !IsTransitionEnabled(TransitionType.ColorTint))
+                !IsTransitionEnabled(TransitionType.TextColorTint))
                 return;
 
             if (!ReferenceEquals(targetText, null))
@@ -109,44 +149,211 @@ namespace SadUtils.UI
         #endregion
 
         #region External Toggles
+        public void SetInteractable(bool isInteractable)
+        {
+            interactable = isInteractable;
+
+            UpdateState();
+        }
+
         public void Freeze()
         {
-
+            frozen = true;
         }
 
         public void Unfreeze()
         {
+            frozen = false;
 
+            UpdateVisuals();
         }
 
-        public void SetInteractable(bool isInteractable)
-        {
-
-        }
+        public bool IsInteractable() => interactable;
+        public bool IsFrozen() => frozen;
         #endregion
 
-        #region Handle Visuals
-        protected void UpdateVisuals()
+        #region Handle State
+        protected virtual void UpdateState()
         {
-            if (frozen)
-                return;
+            SetState(DetermineCurrentState());
         }
+
+        private ButtonState DetermineCurrentState()
+        {
+            if (!interactable)
+                return ButtonState.Disabled;
+
+            if (isCursorOverButton)
+            {
+                if (isButtonPressed)
+                    return ButtonState.Pressed;
+                else
+                    return ButtonState.Highlighted;
+            }
+
+            return ButtonState.Normal;
+        }
+
+        public void SetState(ButtonState stateToSet, bool forceUpdateVisuals = false)
+        {
+            if (state == stateToSet && !forceUpdateVisuals)
+                return;
+
+            state = stateToSet;
+
+            UpdateVisuals(forceUpdateVisuals);
+        }
+
+        #endregion
+
+        #region Configure Visuals
+        protected void UpdateVisuals(bool forceUpdate = false)
+        {
+            if (frozen && !forceUpdate)
+                return;
+
+            ButtonVisualData visualData = GetButtonVisualData();
+            ApplyVisuals(visualData);
+        }
+
+        private ButtonVisualData GetButtonVisualData()
+        {
+            switch (state)
+            {
+                case ButtonState.Highlighted:
+                    return highlightedVisualData;
+
+                case ButtonState.Pressed:
+                    return pressedVisualData;
+
+                case ButtonState.Disabled:
+                    return disabledVisualData;
+
+                default:
+                    return normalVisualData;
+            }
+        }
+
+        private void ApplyVisuals(ButtonVisualData visualData)
+        {
+            if (IsTransitionEnabled(TransitionType.ColorTint))
+                StartColorTintTransition(visualData);
+            if (IsTransitionEnabled(TransitionType.SpriteSwap))
+                SetSprite(visualData);
+            if (IsTransitionEnabled(TransitionType.Animation))
+                TriggerAnimation(visualData);
+            if (IsTransitionEnabled(TransitionType.TextSwap))
+                SetText(visualData);
+            if (IsTransitionEnabled(TransitionType.TextColorTint))
+                StartTextColorTintTransition(visualData);
+        }
+
+        private void StartColorTintTransition(ButtonVisualData visualData)
+        {
+            if (colorTransitionRoutine != null)
+                StopCoroutine(colorTransitionRoutine);
+
+            colorTransitionRoutine = StartCoroutine(
+                TransitionColorTintCo(
+                    visualData.color,
+                    visualData.colorTransitionDuration));
+        }
+
+        private void SetSprite(ButtonVisualData visualData)
+        {
+            Sprite sprite = visualData.sprite;
+
+            // if none is set, use normal sprite
+            if (ReferenceEquals(sprite, null))
+                sprite = normalVisualData.sprite;
+
+            targetImage.sprite = sprite;
+        }
+
+        private void TriggerAnimation(ButtonVisualData visualData)
+        {
+            if (visualData.transitionTrigger == "")
+                return;
+
+            targetAnimator.SetTrigger(visualData.triggerHash);
+        }
+
+        private void SetText(ButtonVisualData visualData)
+        {
+            string text = visualData.text;
+
+            if (text == "")
+                text = normalVisualData.text;
+
+            targetText.text = text;
+        }
+
+        private void StartTextColorTintTransition(ButtonVisualData visualData)
+        {
+            if (textColorTransitionRoutine != null)
+                StopCoroutine(textColorTransitionRoutine);
+
+            textColorTransitionRoutine = StartCoroutine(
+                TransitionTextColorTintCo(
+                    visualData.textColor,
+                    visualData.textColorTransitionDuration));
+        }
+
+        #region Color Transition Loops
+        private IEnumerator TransitionColorTintCo(Color targetColor, float duration)
+        {
+            Color startColor = targetImage.color;
+            float timer = 0;
+
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                targetImage.color = Color.Lerp(startColor, targetColor, timer / duration);
+
+                yield return null;
+            }
+
+            targetImage.color = targetColor;
+        }
+
+        private IEnumerator TransitionTextColorTintCo(Color targetColor, float duration)
+        {
+            Color startColor = targetText.color;
+            float timer = 0;
+
+            while (timer < duration)
+            {
+                timer += Time.deltaTime;
+                targetText.color = Color.Lerp(startColor, targetColor, timer / duration);
+
+                yield return null;
+            }
+
+            targetText.color = targetColor;
+        }
+        #endregion
         #endregion
 
         #region Pointer Event Handler
         public void OnPointerEnter(PointerEventData eventData)
         {
             isCursorOverButton = true;
+
+            UpdateState();
         }
 
         public void OnPointerExit(PointerEventData eventData)
         {
             isCursorOverButton = false;
+
+            UpdateState();
         }
 
         public void OnPointerDown(PointerEventData eventData)
         {
             isButtonPressed = true;
+
+            UpdateState();
         }
 
         public void OnPointerUp(PointerEventData eventData)
@@ -159,7 +366,7 @@ namespace SadUtils.UI
             if (isCursorOverButton)
                 OnClick?.Invoke();
 
-            UpdateVisuals();
+            UpdateState();
         }
         #endregion
 
