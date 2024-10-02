@@ -5,9 +5,11 @@ namespace SadUtils.UI.Types
     [System.Serializable]
     public class ButtonVisualData
     {
+        private const float DEFAULT_TRANSITION_LENGTH = 0.1f;
+
         // Color Tint Settings
-        public Color color = Color.white;
-        public float colorTransitionDuration = 1f;
+        public Color color;
+        public float colorTransitionDuration;
 
         [Space]
         // Sprite Swap
@@ -16,7 +18,7 @@ namespace SadUtils.UI.Types
         [Space]
         // Animation
         public string transitionTrigger;
-        public int triggerHash { get; private set; }
+        public int TriggerHash { get; private set; }
 
         [Space]
         // Text Swap
@@ -24,12 +26,26 @@ namespace SadUtils.UI.Types
 
         [Space]
         // Text Color Tint
-        public Color textColor = Color.white;
-        public float textColorTransitionDuration = 1f;
+        public Color textColor;
+        public float textColorTransitionDuration;
+
+        // Default constructor
+        public ButtonVisualData(string transitionTrigger)
+        {
+            color = Color.white;
+            colorTransitionDuration = DEFAULT_TRANSITION_LENGTH;
+
+            sprite = null;
+
+            this.transitionTrigger = transitionTrigger;
+
+            textColor = Color.black;
+            textColorTransitionDuration = DEFAULT_TRANSITION_LENGTH;
+        }
 
         public void CalculateTriggerHash()
         {
-            triggerHash = Animator.StringToHash(transitionTrigger);
+            TriggerHash = Animator.StringToHash(transitionTrigger);
         }
     }
 }

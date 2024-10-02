@@ -1,3 +1,4 @@
+using SadUtils.Types;
 using SadUtils.UI.Types;
 using System;
 using System.Collections;
@@ -26,7 +27,7 @@ namespace SadUtils.UI
         }
 
         [Header("Interactable Settings")]
-        [SerializeField] private bool interactable = true;
+        [SerializeField] private bool interactable;
 
         [Tooltip("Freezing a button prevents state updates")]
         [SerializeField] private bool frozen;
@@ -42,10 +43,7 @@ namespace SadUtils.UI
         [SerializeField] private TMP_Text targetText;
 
         [Space]
-        [SerializeField] private ButtonVisualData normalVisualData;
-        [SerializeField] private ButtonVisualData highlightedVisualData;
-        [SerializeField] private ButtonVisualData pressedVisualData;
-        [SerializeField] private ButtonVisualData disabledVisualData;
+        [SerializeField] private UnityDictionary<ButtonState, ButtonVisualData> visualDataDict;
 
         [Header("Events")]
         public UnityEvent OnClick;
@@ -94,10 +92,8 @@ namespace SadUtils.UI
             if (!IsTransitionEnabled(TransitionType.Animation))
                 return;
 
-            normalVisualData.CalculateTriggerHash();
-            highlightedVisualData.CalculateTriggerHash();
-            pressedVisualData.CalculateTriggerHash();
-            disabledVisualData.CalculateTriggerHash();
+            foreach (ButtonVisualData stateVisualData in visualDataDict.Values)
+                stateVisualData.CalculateTriggerHash();
         }
 
         private void TryFetchImage()
@@ -212,26 +208,7 @@ namespace SadUtils.UI
             if (frozen && !forceUpdate)
                 return;
 
-            ButtonVisualData visualData = GetButtonVisualData();
-            ApplyVisuals(visualData);
-        }
-
-        private ButtonVisualData GetButtonVisualData()
-        {
-            switch (state)
-            {
-                case ButtonState.Highlighted:
-                    return highlightedVisualData;
-
-                case ButtonState.Pressed:
-                    return pressedVisualData;
-
-                case ButtonState.Disabled:
-                    return disabledVisualData;
-
-                default:
-                    return normalVisualData;
-            }
+            ApplyVisuals(visualDataDict[state]);
         }
 
         private void ApplyVisuals(ButtonVisualData visualData)
@@ -265,7 +242,7 @@ namespace SadUtils.UI
 
             // if none is set, use normal sprite
             if (ReferenceEquals(sprite, null))
-                sprite = normalVisualData.sprite;
+                sprite = visualDataDict[ButtonState.Normal].sprite;
 
             targetImage.sprite = sprite;
         }
@@ -275,15 +252,12 @@ namespace SadUtils.UI
             if (visualData.transitionTrigger == "")
                 return;
 
-            targetAnimator.SetTrigger(visualData.triggerHash);
+            targetAnimator.SetTrigger(visualData.TriggerHash);
         }
 
         private void SetText(ButtonVisualData visualData)
         {
             string text = visualData.text;
-
-            if (text == "")
-                text = normalVisualData.text;
 
             targetText.text = text;
         }
@@ -383,6 +357,46 @@ namespace SadUtils.UI
         public bool IsTransitionEnabled(TransitionType transitionType)
         {
             return enabledTransitions.Contains(transitionType);
+        }
+        #endregion
+
+        #region Reset
+        protected virtual void Reset()
+        {
+            interactable = true;
+
+            Reset_TryGetExternalComponents();
+            Reset_FillVisualDataDict();
+        }
+
+        private void Reset_TryGetExternalComponents()
+        {
+            targetImage = GetComponent<Image>();
+            targetText = GetComponentInChildren<TMP_Text>();
+            targetAnimator = GetComponent<Animator>();
+        }
+
+        private void Reset_FillVisualDataDict()
+        {
+            visualDataDict = new();
+
+            ButtonState[] visualStates = new ButtonState[4]
+            {
+                ButtonState.Normal,
+                ButtonState.Highlighted,
+                ButtonState.Pressed,
+                ButtonState.Disabled
+            };
+
+            foreach (ButtonState state in visualStates)
+                visualDataDict.Add(state, Reset_GetNewVisualData(state));
+        }
+
+        private ButtonVisualData Reset_GetNewVisualData(ButtonState state)
+        {
+            string animTrigger = state.ToString();
+
+            return new ButtonVisualData(animTrigger);
         }
         #endregion
     }
