@@ -2,7 +2,6 @@ using SadUtils.Types;
 using SadUtils.UI.Types;
 using System;
 using System.Collections;
-using System.Collections.Generic;
 using TMPro;
 using UnityEngine;
 using UnityEngine.Events;
@@ -16,16 +15,6 @@ namespace SadUtils.UI
     {
         public enum ButtonState { Normal, Highlighted, Pressed, Selected, Disabled }
 
-        [Flags]
-        public enum TransitionType
-        {
-            ColorTint = 1,       // 00001
-            SpriteSwap = 2,      // 00010
-            Animation = 4,       // 00100
-            TextSwap = 8,        // 01000
-            TextColorTint = 16,  // 10000
-        }
-
         [Header("Interactable Settings")]
         [SerializeField] private bool interactable;
 
@@ -33,7 +22,7 @@ namespace SadUtils.UI
         [SerializeField] private bool frozen;
 
         [Header("Transition Settings")]
-        [SerializeField] private TransitionType transitions;
+        [SerializeField] private ButtonTransition transitions;
 
         // Only used when ColorTint or SpriteSwap is enabled.
         [SerializeField] private Image targetImage;
@@ -48,9 +37,6 @@ namespace SadUtils.UI
         [Header("Events")]
         public UnityEvent OnClick;
 
-        // Keep track of transitions.
-        private HashSet<TransitionType> enabledTransitions;
-
         // Keep track of running coroutines
         private Coroutine colorTransitionRoutine;
         private Coroutine textColorTransitionRoutine;
@@ -64,7 +50,6 @@ namespace SadUtils.UI
         #region Awake
         private void Awake()
         {
-            CompileEnabledTransitionTypes();
             InitializeVisualData();
 
             TryFetchImage();
@@ -74,22 +59,9 @@ namespace SadUtils.UI
             SetState(DetermineCurrentState(), true);
         }
 
-        private void CompileEnabledTransitionTypes()
-        {
-            enabledTransitions = new();
-
-            Array allTypes = Enum.GetValues(typeof(TransitionType));
-
-            foreach (TransitionType type in allTypes)
-            {
-                if (IsTransitionBitEnabled(type))
-                    enabledTransitions.Add(type);
-            }
-        }
-
         private void InitializeVisualData()
         {
-            if (!IsTransitionEnabled(TransitionType.Animation))
+            if (!IsTransitionEnabled(ButtonTransition.Animation))
                 return;
 
             foreach (ButtonVisualData stateVisualData in visualDataDict.Values)
@@ -98,8 +70,8 @@ namespace SadUtils.UI
 
         private void TryFetchImage()
         {
-            if (!IsTransitionEnabled(TransitionType.ColorTint) &&
-                !IsTransitionEnabled(TransitionType.SpriteSwap))
+            if (!IsTransitionEnabled(ButtonTransition.ColorTint) &&
+                !IsTransitionEnabled(ButtonTransition.SpriteSwap))
                 return;
 
             if (!ReferenceEquals(targetImage, null))
@@ -114,7 +86,7 @@ namespace SadUtils.UI
 
         private void TryFetchAnimator()
         {
-            if (!IsTransitionEnabled(TransitionType.Animation))
+            if (!IsTransitionEnabled(ButtonTransition.Animation))
                 return;
 
             if (targetAnimator != null)
@@ -129,8 +101,8 @@ namespace SadUtils.UI
 
         private void TryFetchText()
         {
-            if (!IsTransitionEnabled(TransitionType.TextSwap) &&
-                !IsTransitionEnabled(TransitionType.TextColorTint))
+            if (!IsTransitionEnabled(ButtonTransition.TextSwap) &&
+                !IsTransitionEnabled(ButtonTransition.TextColorTint))
                 return;
 
             if (!ReferenceEquals(targetText, null))
@@ -213,15 +185,15 @@ namespace SadUtils.UI
 
         private void ApplyVisuals(ButtonVisualData visualData)
         {
-            if (IsTransitionEnabled(TransitionType.ColorTint))
+            if (IsTransitionEnabled(ButtonTransition.ColorTint))
                 StartColorTintTransition(visualData);
-            if (IsTransitionEnabled(TransitionType.SpriteSwap))
+            if (IsTransitionEnabled(ButtonTransition.SpriteSwap))
                 SetSprite(visualData);
-            if (IsTransitionEnabled(TransitionType.Animation))
+            if (IsTransitionEnabled(ButtonTransition.Animation))
                 TriggerAnimation(visualData);
-            if (IsTransitionEnabled(TransitionType.TextSwap))
+            if (IsTransitionEnabled(ButtonTransition.TextSwap))
                 SetText(visualData);
-            if (IsTransitionEnabled(TransitionType.TextColorTint))
+            if (IsTransitionEnabled(ButtonTransition.TextColorTint))
                 StartTextColorTintTransition(visualData);
         }
 
@@ -349,14 +321,14 @@ namespace SadUtils.UI
         /// Determines if the bit for the given <paramref name="transitionType"/> is enabled through the inspector.
         /// </summary>
         /// <param name="transitionType">transition to check for.</param>
-        private bool IsTransitionBitEnabled(TransitionType transitionType)
+        public bool IsTransitionEnabled(ButtonTransition transitionType)
         {
             return (transitions & transitionType) != 0;
         }
 
-        public bool IsTransitionEnabled(TransitionType transitionType)
+        public bool IsAnyTransitionEnabled()
         {
-            return enabledTransitions.Contains(transitionType);
+            return (int)transitions > 0;
         }
         #endregion
 

@@ -3,7 +3,9 @@
     "rootNamespace": "SadUtils.Editor",
     "references": [
         "GUID:1ac19e871fce99f4f8eabb42e783f30d",
-        "GUID:84971957b7247f24598d7fa83cf9e720"
+        "GUID:84971957b7247f24598d7fa83cf9e720",
+        "GUID:d819e1ffd33c29c44942acf2fcd1e151",
+        "GUID:d5f469c18a0059a4696bc051272b929c"
     ],
     "includePlatforms": [
         "Editor"
