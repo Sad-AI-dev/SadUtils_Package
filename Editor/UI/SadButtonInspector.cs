@@ -104,10 +104,7 @@ namespace SadUtils.Editor
                 visibleProperties.Enqueue(targetTextProperty);
 
             if (visibleProperties.Count > 0)
-            {
-                EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
-                EditorGUILayout.LabelField("Target References", EditorStyles.boldLabel);
-            }
+                DrawHeader("Target References");
 
             while (visibleProperties.Count > 0)
                 EditorGUILayout.PropertyField(visibleProperties.Dequeue());
@@ -115,8 +112,20 @@ namespace SadUtils.Editor
 
         private void DrawVisualData()
         {
+            if (!buttonReference.IsAnyTransitionEnabled())
+                return;
 
+            DrawHeader("Transition Visuals");
+
+            // somehow try to draw visual data in a neat way
+            // (preferably through the serialized property)
+
+            // see discussion about it here: https://discussions.unity.com/t/using-serializedproperty-on-custom-classes/45154/2
         }
+
+        #region Draw Visual Data
+
+        #endregion
 
         private void DrawEvents()
         {
@@ -128,6 +137,12 @@ namespace SadUtils.Editor
         private bool HasTransition(ButtonTransition transition)
         {
             return buttonReference.IsTransitionEnabled(transition);
+        }
+
+        private void DrawHeader(string label)
+        {
+            EditorGUILayout.Space(EditorGUIUtility.singleLineHeight);
+            EditorGUILayout.LabelField(label, EditorStyles.boldLabel);
         }
         #endregion
     }
