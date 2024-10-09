@@ -20,6 +20,18 @@ namespace SadUtils.Editor
 
         private const string VISUAL_DATA_DICT_PROPERTY_NAME = "visualDataDict";
 
+        private const string INTERNAL_DICT_LIST_PROPERTY_NAME = "dictionary";
+        private const string DICT_KEY_PROPERTY_NAME = "key";
+        private const string DICT_VALUE_PROPERTY_NAME = "value";
+
+        private const string VISUAL_DATA_COLOR_PROPERTY_NAME = "color";
+        private const string VISUAL_DATA_COLOR_TRANSITION_PROPERTY_NAME = "colorTransitionDuration";
+        private const string VISUAL_DATA_SPRITE_PROPERTY_NAME = "sprite";
+        private const string VISUAL_DATA_TRANSITION_TRIGGER_PROPERTY_NAME = "transitionTrigger";
+        private const string VISUAL_DATA_TEXT_PROPERTY_NAME = "text";
+        private const string VISUAL_DATA_TEXT_COLOR_PROPERTY_NAME = "textColor";
+        private const string VISUAL_DATA_TEXT_COLOR_TRANSITION_PROPERTY_NAME = "textColorTransitionDuration";
+
         private const string ON_CLICK_PROPERTY_NAME = "OnClick";
 
         // --- Vars ---
@@ -32,17 +44,31 @@ namespace SadUtils.Editor
         private SerializedProperty targetAnimatorProperty;
         private SerializedProperty targetTextProperty;
 
-        private SerializedProperty visualDataDictProperty;
+        private SerializedProperty visualDataDictListProperty;
 
         private SerializedProperty onClickProperty;
 
         private SadButton buttonReference;
 
+        private static bool[] foldOutStates;
+
         #region Cache Data
         private void OnEnable()
         {
-            buttonReference = target as SadButton;
+            CacheButtonReference();
 
+            CachePropertyFields();
+
+            InitFoldOutStates();
+        }
+
+        private void CacheButtonReference()
+        {
+            buttonReference = target as SadButton;
+        }
+
+        private void CachePropertyFields()
+        {
             interactableProperty = serializedObject.FindProperty(INTERACTABLE_PROPERTY_NAME);
             frozenProperty = serializedObject.FindProperty(FROZEN_PROPERTY_NAME);
 
@@ -52,9 +78,19 @@ namespace SadUtils.Editor
             targetAnimatorProperty = serializedObject.FindProperty(TARGET_ANIMATOR_PROPERTY_NAME);
             targetTextProperty = serializedObject.FindProperty(TARGET_TEXT_PROPERTY_NAME);
 
-            visualDataDictProperty = serializedObject.FindProperty(VISUAL_DATA_DICT_PROPERTY_NAME);
+            SerializedProperty visualDataDictProperty = serializedObject.FindProperty(VISUAL_DATA_DICT_PROPERTY_NAME);
+            visualDataDictListProperty = visualDataDictProperty.FindPropertyRelative(INTERNAL_DICT_LIST_PROPERTY_NAME);
 
             onClickProperty = serializedObject.FindProperty(ON_CLICK_PROPERTY_NAME);
+        }
+
+        private void InitFoldOutStates()
+        {
+            if (foldOutStates != null)
+                return;
+
+            int foldOutCount = visualDataDictListProperty.arraySize;
+            foldOutStates = new bool[foldOutCount];
         }
         #endregion
 
@@ -110,21 +146,95 @@ namespace SadUtils.Editor
                 EditorGUILayout.PropertyField(visibleProperties.Dequeue());
         }
 
+        #region Draw Visual Data
         private void DrawVisualData()
         {
             if (!buttonReference.IsAnyTransitionEnabled())
                 return;
 
-            DrawHeader("Transition Visuals");
+            DrawHeader("Transition Visual Settings");
 
-            // somehow try to draw visual data in a neat way
-            // (preferably through the serialized property)
-
-            // see discussion about it here: https://discussions.unity.com/t/using-serializedproperty-on-custom-classes/45154/2
+            int visualDictEntries = visualDataDictListProperty.arraySize;
+            for (int i = 0; i < visualDictEntries; i++)
+                DrawVisualDataEntryProperty(visualDataDictListProperty.GetArrayElementAtIndex(i), i);
         }
 
-        #region Draw Visual Data
+        private void DrawVisualDataEntryProperty(SerializedProperty visualDataEntryProperty, int entryIndex)
+        {
+            string foldOutName = GetFoldOutName(visualDataEntryProperty);
 
+            foldOutStates[entryIndex] = EditorGUILayout.Foldout(foldOutStates[entryIndex], foldOutName, true);
+
+            if (foldOutStates[entryIndex])
+                DrawVisualDataStruct(visualDataEntryProperty);
+        }
+
+        private string GetFoldOutName(SerializedProperty visualDataEntryProperty)
+        {
+            SerializedProperty keyProperty = visualDataEntryProperty.FindPropertyRelative(DICT_KEY_PROPERTY_NAME);
+            SadButton.ButtonState state = (SadButton.ButtonState)keyProperty.enumValueIndex;
+
+            return state.ToString();
+        }
+
+        private void DrawVisualDataStruct(SerializedProperty visualDataEntryProperty)
+        {
+            SerializedProperty structProperty = visualDataEntryProperty.FindPropertyRelative(DICT_VALUE_PROPERTY_NAME);
+
+            if (HasTransition(ButtonTransition.ColorTint))
+                DrawVisualDataColorTintFields(structProperty);
+
+            if (HasTransition(ButtonTransition.SpriteSwap))
+                DrawVisualDataSpriteField(structProperty);
+
+            if (HasTransition(ButtonTransition.Animation))
+                DrawVisualDataAnimationField(structProperty);
+
+            if (HasTransition(ButtonTransition.TextSwap))
+                DrawVisualDataTextField(structProperty);
+
+            if (HasTransition(ButtonTransition.TextColorTint))
+                DrawVisualDataTextColorTintFields(structProperty);
+        }
+
+        private void DrawVisualDataColorTintFields(SerializedProperty structProperty)
+        {
+            SerializedProperty colorProperty = structProperty.FindPropertyRelative(VISUAL_DATA_COLOR_PROPERTY_NAME);
+            SerializedProperty colorTransitionProperty = structProperty.FindPropertyRelative(VISUAL_DATA_COLOR_TRANSITION_PROPERTY_NAME);
+
+            EditorGUILayout.PropertyField(colorProperty);
+            EditorGUILayout.PropertyField(colorTransitionProperty);
+        }
+
+        private void DrawVisualDataSpriteField(SerializedProperty structProperty)
+        {
+            SerializedProperty spriteProperty = structProperty.FindPropertyRelative(VISUAL_DATA_SPRITE_PROPERTY_NAME);
+
+            EditorGUILayout.PropertyField(spriteProperty);
+        }
+
+        private void DrawVisualDataAnimationField(SerializedProperty structProperty)
+        {
+            SerializedProperty triggerProperty = structProperty.FindPropertyRelative(VISUAL_DATA_TRANSITION_TRIGGER_PROPERTY_NAME);
+
+            EditorGUILayout.PropertyField(triggerProperty);
+        }
+
+        private void DrawVisualDataTextField(SerializedProperty structProperty)
+        {
+            SerializedProperty textProperty = structProperty.FindPropertyRelative(VISUAL_DATA_TEXT_PROPERTY_NAME);
+
+            EditorGUILayout.PropertyField(textProperty);
+        }
+
+        private void DrawVisualDataTextColorTintFields(SerializedProperty structProperty)
+        {
+            SerializedProperty textColorProperty = structProperty.FindPropertyRelative(VISUAL_DATA_TEXT_COLOR_PROPERTY_NAME);
+            SerializedProperty textColorTransitionProperty = structProperty.FindPropertyRelative(VISUAL_DATA_TEXT_COLOR_TRANSITION_PROPERTY_NAME);
+
+            EditorGUILayout.PropertyField(textColorProperty);
+            EditorGUILayout.PropertyField(textColorTransitionProperty);
+        }
         #endregion
 
         private void DrawEvents()

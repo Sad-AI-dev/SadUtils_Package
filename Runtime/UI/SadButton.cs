@@ -328,7 +328,7 @@ namespace SadUtils.UI
 
         public bool IsAnyTransitionEnabled()
         {
-            return (int)transitions > 0;
+            return transitions != 0;
         }
         #endregion
 
