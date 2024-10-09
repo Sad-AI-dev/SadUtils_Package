@@ -5,18 +5,28 @@ namespace SadUtils.UI
 {
     public class TabController : MonoBehaviour
     {
+        private enum DisableBehaviour
+        {
+            Reset,
+            None,
+            Retain
+        }
+
         [SerializeField] private SadButton[] tabButtons;
         [SerializeField] private GameObject[] tabContents;
 
         [Space]
         [SerializeField] private int defaultTabIndex;
 
+        [Header("Disable Behaviour")]
+        [SerializeField] private DisableBehaviour disableBehaviour;
+
         private int currentIndex;
 
         private void Awake()
         {
             if (tabButtons.Length != tabContents.Length)
-                throw new System.Exception("Number of tab buttons does not match tab contents!");
+                throw new Exception("Number of tab buttons does not match tab contents!");
 
             InitButtons();
             ShowDefaultTab();
@@ -38,6 +48,7 @@ namespace SadUtils.UI
             ShowTab(defaultTabIndex);
         }
 
+        #region Show / Hide Tab
         public void SwitchTab(int targetIndex)
         {
             HideTab(currentIndex);
@@ -75,6 +86,26 @@ namespace SadUtils.UI
 
             // Store shown tab index.
             currentIndex = index;
+        }
+        #endregion
+
+        private void OnDisable()
+        {
+            switch (disableBehaviour)
+            {
+                case DisableBehaviour.Reset:
+                    ShowTab(defaultTabIndex);
+                    break;
+
+                case DisableBehaviour.Retain:
+                    StoreCurrentIndex();
+                    break;
+            }
+        }
+
+        private void StoreCurrentIndex()
+        {
+
         }
     }
 }
