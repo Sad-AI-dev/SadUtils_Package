@@ -35,7 +35,8 @@ namespace SadUtils.UI
         [SerializeField] private UnityDictionary<ButtonState, ButtonVisualData> visualDataDict;
 
         [Header("Events")]
-        public UnityEvent OnClick;
+        [SerializeField] private UnityEvent onClick;
+        public event Action<SadButton> OnClick;
 
         // Keep track of running coroutines
         private Coroutine colorTransitionRoutine;
@@ -51,6 +52,7 @@ namespace SadUtils.UI
         private void Awake()
         {
             InitializeVisualData();
+            InitializeOnClick();
 
             TryFetchImage();
             TryFetchAnimator();
@@ -66,6 +68,11 @@ namespace SadUtils.UI
 
             foreach (ButtonVisualData stateVisualData in visualDataDict.Values)
                 stateVisualData.CalculateTriggerHash();
+        }
+
+        private void InitializeOnClick()
+        {
+            onClick.AddListener(() => OnClick?.Invoke(this));
         }
 
         private void TryFetchImage()
@@ -124,16 +131,12 @@ namespace SadUtils.UI
             UpdateState();
         }
 
-        public void Freeze()
+        public void SetFrozen(bool isFrozen)
         {
-            frozen = true;
-        }
+            frozen = isFrozen;
 
-        public void Unfreeze()
-        {
-            frozen = false;
-
-            UpdateVisuals();
+            if (!frozen)
+                UpdateVisuals();
         }
 
         public bool IsInteractable() => interactable;
@@ -310,7 +313,7 @@ namespace SadUtils.UI
                 return;
 
             if (isCursorOverButton)
-                OnClick?.Invoke();
+                onClick?.Invoke();
 
             UpdateState();
         }
@@ -352,11 +355,12 @@ namespace SadUtils.UI
         {
             visualDataDict = new();
 
-            ButtonState[] visualStates = new ButtonState[4]
+            ButtonState[] visualStates = new ButtonState[5]
             {
                 ButtonState.Normal,
                 ButtonState.Highlighted,
                 ButtonState.Pressed,
+                ButtonState.Selected,
                 ButtonState.Disabled
             };
 

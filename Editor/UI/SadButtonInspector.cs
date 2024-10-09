@@ -32,7 +32,7 @@ namespace SadUtils.Editor
         private const string VISUAL_DATA_TEXT_COLOR_PROPERTY_NAME = "textColor";
         private const string VISUAL_DATA_TEXT_COLOR_TRANSITION_PROPERTY_NAME = "textColorTransitionDuration";
 
-        private const string ON_CLICK_PROPERTY_NAME = "OnClick";
+        private const string ON_CLICK_PROPERTY_NAME = "onClick";
 
         // --- Vars ---
         private SerializedProperty interactableProperty;
