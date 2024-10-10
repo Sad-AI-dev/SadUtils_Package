@@ -205,10 +205,14 @@ namespace SadUtils.UI
             if (colorTransitionRoutine != null)
                 StopCoroutine(colorTransitionRoutine);
 
-            colorTransitionRoutine = StartCoroutine(
-                TransitionColorTintCo(
-                    visualData.color,
-                    visualData.colorTransitionDuration));
+            if (gameObject.activeInHierarchy)
+                colorTransitionRoutine = StartCoroutine(
+                    TransitionColorTintCo(
+                        visualData.color,
+                        visualData.colorTransitionDuration));
+
+            else
+                targetImage.color = visualData.color;
         }
 
         private void SetSprite(ButtonVisualData visualData)
@@ -242,10 +246,14 @@ namespace SadUtils.UI
             if (textColorTransitionRoutine != null)
                 StopCoroutine(textColorTransitionRoutine);
 
-            textColorTransitionRoutine = StartCoroutine(
-                TransitionTextColorTintCo(
-                    visualData.textColor,
-                    visualData.textColorTransitionDuration));
+            if (gameObject.activeInHierarchy)
+                textColorTransitionRoutine = StartCoroutine(
+                    TransitionTextColorTintCo(
+                        visualData.textColor,
+                        visualData.textColorTransitionDuration));
+
+            else
+                targetText.color = visualData.textColor;
         }
 
         #region Color Transition Loops

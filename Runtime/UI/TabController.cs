@@ -5,6 +5,8 @@ namespace SadUtils.UI
 {
     public class TabController : MonoBehaviour
     {
+        private const string DEFAULT_TAB_PREF_SUFFIX = "_defaultTab";
+
         private enum DisableBehaviour
         {
             Reset,
@@ -19,6 +21,10 @@ namespace SadUtils.UI
         [SerializeField] private int defaultTabIndex;
 
         [Header("Disable Behaviour")]
+        [Tooltip("Determines how the controller reacts to being disabled.\n" +
+            "Reset: Resets the current tab to DefaultTabIndex.\n" +
+            "None: Does not react to being disabled.\n" +
+            "Retain: Retains the current active tab between play sessions.")]
         [SerializeField] private DisableBehaviour disableBehaviour;
 
         private int currentIndex;
@@ -27,7 +33,10 @@ namespace SadUtils.UI
         {
             if (tabButtons.Length != tabContents.Length)
                 throw new Exception("Number of tab buttons does not match tab contents!");
+        }
 
+        private void Start()
+        {
             InitButtons();
             ShowDefaultTab();
         }
@@ -45,7 +54,20 @@ namespace SadUtils.UI
                 HideTab(i);
 
             // Show default tab.
-            ShowTab(defaultTabIndex);
+            ShowTab(GetDefaultTabIndex());
+        }
+
+        private int GetDefaultTabIndex()
+        {
+            if (disableBehaviour == DisableBehaviour.Retain)
+            {
+                string prefKey = gameObject.name + DEFAULT_TAB_PREF_SUFFIX;
+
+                if (PlayerPrefs.HasKey(prefKey))
+                    defaultTabIndex = PlayerPrefs.GetInt(prefKey);
+            }
+
+            return defaultTabIndex;
         }
 
         #region Show / Hide Tab
@@ -94,7 +116,7 @@ namespace SadUtils.UI
             switch (disableBehaviour)
             {
                 case DisableBehaviour.Reset:
-                    ShowTab(defaultTabIndex);
+                    SwitchTab(defaultTabIndex);
                     break;
 
                 case DisableBehaviour.Retain:
@@ -105,7 +127,8 @@ namespace SadUtils.UI
 
         private void StoreCurrentIndex()
         {
-
+            string prefKey = gameObject.name + DEFAULT_TAB_PREF_SUFFIX;
+            PlayerPrefs.SetInt(prefKey, currentIndex);
         }
     }
 }
