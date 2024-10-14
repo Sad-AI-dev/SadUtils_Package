@@ -1,6 +1,6 @@
 using UnityEngine;
 
-namespace SadUtils.UI.Types
+namespace SadUtils.UI
 {
     [System.Serializable]
     public class ButtonVisualData

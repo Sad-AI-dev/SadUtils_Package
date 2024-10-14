@@ -4,9 +4,7 @@ using SadUtils.NewInputSystem;
 using SadUtils.LegacyInput;
 #endif
 
-using SadUtils.Types;
-
-namespace SadUtils.Core
+namespace SadUtils
 {
     public static class InputProviderFactory
     {

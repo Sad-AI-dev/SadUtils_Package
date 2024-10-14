@@ -1,6 +1,6 @@
 using System;
 
-namespace SadUtils.UI.Types
+namespace SadUtils.UI
 {
     [Flags]
     public enum ButtonTransition

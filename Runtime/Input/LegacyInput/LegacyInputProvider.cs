@@ -1,5 +1,4 @@
 #if ENABLE_LEGACY_INPUT_MANAGER
-using SadUtils.Types;
 using UnityEngine;
 
 namespace SadUtils.LegacyInput
