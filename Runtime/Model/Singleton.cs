@@ -6,7 +6,7 @@ namespace SadUtils
     {
         public static T Instance { get; private set; }
 
-        public static WaitUntil WaitForInstance { get { return GetWaitForInstance(); } }
+        public static WaitUntil WaitForInstance => GetWaitForInstance();
         private static WaitUntil waitForInstance;
 
         public static bool HasInstance { get; private set; }
