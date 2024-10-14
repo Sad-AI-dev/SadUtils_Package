@@ -1,0 +1,17 @@
+{
+    "name": "sadai.sadutils.model",
+    "rootNamespace": "SadUtils",
+    "references": [
+        "GUID:1ac19e871fce99f4f8eabb42e783f30d",
+        "GUID:84971957b7247f24598d7fa83cf9e720"
+    ],
+    "includePlatforms": [],
+    "excludePlatforms": [],
+    "allowUnsafeCode": false,
+    "overrideReferences": false,
+    "precompiledReferences": [],
+    "autoReferenced": true,
+    "defineConstraints": [],
+    "versionDefines": [],
+    "noEngineReferences": false
+}
