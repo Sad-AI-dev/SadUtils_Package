@@ -14,6 +14,6 @@ It is highly adviced to discuss usage of the package with the creator before imp
 The package will be considered stable once v1.0.0 releases.  
 There is no timeline for the v1.0.0 release.
 
-# Links
-## [Changelog](https://github.com/Sad-AI-dev/SadUtils_Package/blob/main/CHANGELOG.md)
-## [Documentation](https://github.com/Sad-AI-dev/SadUtils_Package/wiki)
+## Links
+### [Changelog](https://github.com/Sad-AI-dev/SadUtils_Package/blob/main/CHANGELOG.md)
+### [Documentation](https://github.com/Sad-AI-dev/SadUtils_Package/wiki)
