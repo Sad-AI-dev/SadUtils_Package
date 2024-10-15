@@ -1,5 +1,5 @@
 {
-    "name": "sadai.sadutils.ui.types",
+    "name": "sadai.sadutils.ui.data",
     "rootNamespace": "SadUtils.UI",
     "references": [],
     "includePlatforms": [],
