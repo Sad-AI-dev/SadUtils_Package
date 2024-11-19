@@ -5,6 +5,22 @@ namespace SadUtils
     public static class LookAt2D
     {
         /// <summary>
+        /// Calculates the rotation resulting in the position x of an object at <paramref name="origin"/>
+        /// to look towards the <paramref name="target"/>.<br/>
+        /// This calculation ignores the z coordinate.
+        /// </summary>
+        /// <param name="origin">position at which to look from.</param>
+        /// <param name="target">position to look at.</param>
+        /// <returns>Quaternion which when applied to a transform at <paramref name="origin"/>
+        /// results in it looking at <paramref name="target"/></returns>
+        public static Quaternion GetLookAtRotation(Vector3 origin, Vector3 target)
+        {
+            Vector2 dir = target - origin;
+            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
+            return Quaternion.AngleAxis(angle, Vector3.forward);
+        }
+
+        /// <summary>
         /// Calculates the rotation resulting in the positive x of the <paramref name="origin"/>
         /// to look towards the <paramref name="position"/>.<br/>
         /// This calculation ignores the z coordinate.
@@ -14,9 +30,7 @@ namespace SadUtils
         /// <returns>Quaternion that results in the <paramref name="origin"/> looking to <paramref name="position"/>.</returns>
         public static Quaternion GetLookAtRotation(Transform origin, Vector3 position)
         {
-            Vector2 dir = position - origin.position;
-            float angle = Mathf.Atan2(dir.y, dir.x) * Mathf.Rad2Deg;
-            return Quaternion.AngleAxis(angle, Vector3.forward);
+            return GetLookAtRotation(origin.position, position);
         }
 
         /// <summary>
