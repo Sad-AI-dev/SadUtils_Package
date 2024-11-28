@@ -2,7 +2,7 @@
 All notable additions, removals, changes and fixes will be documented on this page.  
 The format is based on [this](https://keepachangelog.com/en/1.0.0/) template.
 
-## [v0.0.5] - UI Essentials++ - 00-00-2024
+## [v0.0.5] - UI Essentials++ - 28-11-2024
 This update focuses in increasing ease of use for the UI elements introduced in v0.0.4  
 Additionally, some small new features were introduced to existing scripts.
 
