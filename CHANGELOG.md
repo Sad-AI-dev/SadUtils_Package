@@ -7,6 +7,14 @@ The format is based on [this](https://keepachangelog.com/en/1.0.0/) template.
 ### Added
 Existing Scripts:
 
+- SadButton
+	- Added multi object editing support.
+
+- ButtonVisualData
+	- New `ignoreTimeScale` field.
+		- Setting this field to *True* makes button transitions that happen over time (such as `ColorTint` and `TextColorTint`) ignore Unity's `Time.timeScale` value.
+			- This may be helpful for scenes that pause the game, such as a pausescreen.
+
 - TabController
 	- New `OnTabChanged` event, which passes the index of the new tab as the parameter.
 		- This should make it easier to work with a `TabController`.

@@ -4,7 +4,7 @@ using UnityEditor;
 
 namespace SadUtils.Editor
 {
-    [CustomEditor(typeof(SadButton))]
+    [CustomEditor(typeof(SadButton)), CanEditMultipleObjects]
     public class SadButtonInspector : UnityEditor.Editor
     {
         // --- Property name constants ---
@@ -30,6 +30,7 @@ namespace SadUtils.Editor
         private const string VISUAL_DATA_TEXT_PROPERTY_NAME = "text";
         private const string VISUAL_DATA_TEXT_COLOR_PROPERTY_NAME = "textColor";
         private const string VISUAL_DATA_TEXT_COLOR_TRANSITION_PROPERTY_NAME = "textColorTransitionDuration";
+        private const string VISUAL_DATA_IGNORE_TIME_SCALE_PROPERTY_NAME = "ignoreTimeScale";
 
         private const string ON_CLICK_PROPERTY_NAME = "onClick";
 
@@ -194,6 +195,10 @@ namespace SadUtils.Editor
 
             if (HasTransition(ButtonTransition.TextColorTint))
                 DrawVisualDataTextColorTintFields(structProperty);
+
+            if (HasTransition(ButtonTransition.ColorTint) ||
+                HasTransition(ButtonTransition.TextColorTint))
+                DrawVisualDataIgnoreTimeScaleField(structProperty);
         }
 
         private void DrawVisualDataColorTintFields(SerializedProperty structProperty)
@@ -233,6 +238,13 @@ namespace SadUtils.Editor
 
             EditorGUILayout.PropertyField(textColorProperty);
             EditorGUILayout.PropertyField(textColorTransitionProperty);
+        }
+
+        private void DrawVisualDataIgnoreTimeScaleField(SerializedProperty structProperty)
+        {
+            SerializedProperty ignoreTimeScaleProperty = structProperty.FindPropertyRelative(VISUAL_DATA_IGNORE_TIME_SCALE_PROPERTY_NAME);
+
+            EditorGUILayout.PropertyField(ignoreTimeScaleProperty);
         }
         #endregion
 

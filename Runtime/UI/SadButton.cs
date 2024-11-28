@@ -207,7 +207,8 @@ namespace SadUtils.UI
                 colorTransitionRoutine = StartCoroutine(
                     TransitionColorTintCo(
                         visualData.color,
-                        visualData.colorTransitionDuration));
+                        visualData.colorTransitionDuration,
+                        visualData.ignoreTimeScale));
 
             else
                 targetImage.color = visualData.color;
@@ -248,21 +249,22 @@ namespace SadUtils.UI
                 textColorTransitionRoutine = StartCoroutine(
                     TransitionTextColorTintCo(
                         visualData.textColor,
-                        visualData.textColorTransitionDuration));
+                        visualData.textColorTransitionDuration,
+                        visualData.ignoreTimeScale));
 
             else
                 targetText.color = visualData.textColor;
         }
 
         #region Color Transition Loops
-        private IEnumerator TransitionColorTintCo(Color targetColor, float duration)
+        private IEnumerator TransitionColorTintCo(Color targetColor, float duration, bool ignoreTimeScale)
         {
             Color startColor = targetImage.color;
             float timer = 0;
 
             while (timer < duration)
             {
-                timer += Time.deltaTime;
+                timer += GetDeltaTime(ignoreTimeScale);
                 targetImage.color = Color.Lerp(startColor, targetColor, timer / duration);
 
                 yield return null;
@@ -271,20 +273,25 @@ namespace SadUtils.UI
             targetImage.color = targetColor;
         }
 
-        private IEnumerator TransitionTextColorTintCo(Color targetColor, float duration)
+        private IEnumerator TransitionTextColorTintCo(Color targetColor, float duration, bool ignoreTimeScale)
         {
             Color startColor = targetText.color;
             float timer = 0;
 
             while (timer < duration)
             {
-                timer += Time.deltaTime;
+                timer += GetDeltaTime(ignoreTimeScale);
                 targetText.color = Color.Lerp(startColor, targetColor, timer / duration);
 
                 yield return null;
             }
 
             targetText.color = targetColor;
+        }
+
+        private float GetDeltaTime(bool ignoreTimeScale)
+        {
+            return ignoreTimeScale ? Time.unscaledDeltaTime : Time.deltaTime;
         }
         #endregion
         #endregion

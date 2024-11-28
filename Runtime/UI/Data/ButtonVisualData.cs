@@ -29,6 +29,10 @@ namespace SadUtils.UI
         public Color textColor;
         public float textColorTransitionDuration;
 
+        [Space]
+        // Ignore time scale toggle
+        public bool ignoreTimeScale;
+
         // Default constructor
         public ButtonVisualData(string transitionTrigger)
         {
@@ -41,6 +45,8 @@ namespace SadUtils.UI
 
             textColor = Color.black;
             textColorTransitionDuration = DEFAULT_TRANSITION_LENGTH;
+
+            ignoreTimeScale = false;
         }
 
         public void CalculateTriggerHash()
