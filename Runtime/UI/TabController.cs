@@ -14,7 +14,7 @@ namespace SadUtils.UI
 
         private const string DEFAULT_TAB_PREF_SUFFIX = "_defaultTab";
 
-        public event Action<int> OnSwitchTab;
+        public event Action<int> OnTabChanged;
 
         [SerializeField] private SadButton[] tabButtons;
         [SerializeField] private GameObject[] tabContents;
@@ -107,7 +107,7 @@ namespace SadUtils.UI
 
             // Store shown tab index.
             CurrentIndex = index;
-            OnSwitchTab?.Invoke(CurrentIndex);
+            OnTabChanged?.Invoke(CurrentIndex);
         }
         #endregion
 

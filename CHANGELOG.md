@@ -4,9 +4,38 @@ The format is based on [this](https://keepachangelog.com/en/1.0.0/) template.
 
 ## [v0.0.5] - name - 00-00-2024
 
+### Added
+Existing Scripts:
+
+- TabController
+	- New `OnTabChanged` event, which passes the index of the new tab as the parameter.
+		- This should make it easier to work with a `TabController`.
+
+- LookAt2D
+	- New `GetLookRotation` function overwrite which takes 2 `Vector3` parameters.
+		- This makes the `GetLookRotation` function more flexible for contexts that don't include a `Transform`.
+
 ### Changed
+General:
+
 - Renamed `UI Types` assembly to `UI Data` in order to be more consistent. 
-  
+
+Scripts:
+
+- SadButton
+	- `OnClick` event no longer passed a reference to the `SadButton`.
+
+- TabController
+	- `CurrentIndex` is no longer *private*, instead it is a *public* readonly field.
+		- This, along with the new `OnTabChanged` event, should make it much easier to work with a `TabController`.
+
+### Removed
+
+### Fixed
+Scripts:
+
+- TabController
+	- No longer relies on `SadButton` to pass a reference of itself in the `OnClick` event.
 
 ## [v0.0.4] - UI Update - 14-10-2024
 This update focuses on adding 2 new UI elements.  
