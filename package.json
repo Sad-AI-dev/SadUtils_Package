@@ -1,8 +1,8 @@
 {
   "name": "com.sadai.sadutils",
-  "version": "0.0.4",
+  "version": "0.0.5",
   "displayName": "Sad Utils",
-  "description": "Utils package by Sad AI",
+  "description": "Utils package by Sad AI, aka Arvid van den Hoogen",
   "unity": "2022.3",
   "unityRelease": "36f1",
   "documentationUrl": "https://github.com/Sad-AI-dev/SadUtils_Package/wiki",

@@ -2,7 +2,9 @@
 All notable additions, removals, changes and fixes will be documented on this page.  
 The format is based on [this](https://keepachangelog.com/en/1.0.0/) template.
 
-## [v0.0.5] - name - 00-00-2024
+## [v0.0.5] - UI Essentials++ - 00-00-2024
+This update focuses in increasing ease of use for the UI elements introduced in v0.0.4  
+Additionally, some small new features were introduced to existing scripts.
 
 ### Added
 Existing Scripts:
@@ -37,15 +39,13 @@ Scripts:
 	- `CurrentIndex` is no longer *private*, instead it is a *public* readonly field.
 		- This, along with the new `OnTabChanged` event, should make it much easier to work with a `TabController`.
 
-### Removed
-
 ### Fixed
 Scripts:
 
 - TabController
 	- No longer relies on `SadButton` to pass a reference of itself in the `OnClick` event.
 
-## [v0.0.4] - UI Update - 14-10-2024
+## [v0.0.4] - UI Essentials - 14-10-2024
 This update focuses on adding 2 new UI elements.  
 Additionally, a lot of changes were made to the internal project structure.  
 A project where this package will be used has started development, so more updates can be expected soon.
