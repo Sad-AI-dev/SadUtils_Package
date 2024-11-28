@@ -34,7 +34,7 @@ namespace SadUtils.UI
 
         [Header("Events")]
         [SerializeField] private UnityEvent onClick;
-        public event Action<SadButton> OnClick;
+        public event Action OnClick;
 
         // Keep track of running coroutines
         private Coroutine colorTransitionRoutine;
@@ -70,7 +70,7 @@ namespace SadUtils.UI
 
         private void InitializeOnClick()
         {
-            onClick.AddListener(() => OnClick?.Invoke(this));
+            onClick.AddListener(() => OnClick?.Invoke());
         }
 
         private void TryFetchImage()

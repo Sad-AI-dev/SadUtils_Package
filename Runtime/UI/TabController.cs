@@ -5,14 +5,16 @@ namespace SadUtils.UI
 {
     public class TabController : MonoBehaviour
     {
-        private const string DEFAULT_TAB_PREF_SUFFIX = "_defaultTab";
-
         private enum DisableBehaviour
         {
             Reset,
             None,
             Retain
         }
+
+        private const string DEFAULT_TAB_PREF_SUFFIX = "_defaultTab";
+
+        public event Action<int> OnSwitchTab;
 
         [SerializeField] private SadButton[] tabButtons;
         [SerializeField] private GameObject[] tabContents;
@@ -27,7 +29,7 @@ namespace SadUtils.UI
             "Retain: Retains the current active tab between play sessions.")]
         [SerializeField] private DisableBehaviour disableBehaviour;
 
-        private int currentIndex;
+        public int CurrentIndex { get; private set; }
 
         private void Awake()
         {
@@ -44,7 +46,10 @@ namespace SadUtils.UI
         private void InitButtons()
         {
             for (int i = 0; i < tabButtons.Length; i++)
-                tabButtons[i].OnClick += SwitchTab;
+            {
+                int index = i;
+                tabButtons[i].OnClick += () => SwitchTab(index);
+            }
         }
 
         private void ShowDefaultTab()
@@ -73,14 +78,8 @@ namespace SadUtils.UI
         #region Show / Hide Tab
         public void SwitchTab(int targetIndex)
         {
-            HideTab(currentIndex);
+            HideTab(CurrentIndex);
             ShowTab(targetIndex);
-        }
-
-        private void SwitchTab(SadButton tabButton)
-        {
-            int targetIndex = Array.IndexOf(tabButtons, tabButton);
-            SwitchTab(targetIndex);
         }
 
         private void HideTab(int index)
@@ -107,7 +106,8 @@ namespace SadUtils.UI
             tabButton.SetInteractable(false);
 
             // Store shown tab index.
-            currentIndex = index;
+            CurrentIndex = index;
+            OnSwitchTab?.Invoke(CurrentIndex);
         }
         #endregion
 
@@ -128,7 +128,7 @@ namespace SadUtils.UI
         private void StoreCurrentIndex()
         {
             string prefKey = gameObject.name + DEFAULT_TAB_PREF_SUFFIX;
-            PlayerPrefs.SetInt(prefKey, currentIndex);
+            PlayerPrefs.SetInt(prefKey, CurrentIndex);
         }
     }
 }
