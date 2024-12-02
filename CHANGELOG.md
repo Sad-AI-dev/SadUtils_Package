@@ -2,11 +2,33 @@
 All notable additions, removals, changes and fixes will be documented on this page.  
 The format is based on [this](https://keepachangelog.com/en/1.0.0/) template.
 
-## [v0.0.6] - TBD - 00-00-2024
+## [v0.0.6] - Popup Update - 00-00-2024
 
 ### Added
+New scripts:
+
+- Popup System
+	- A system for displaying popup messages and handling the user's response.  
+	Scripts included:
+		- Popup
+		- PopupManager
+		- PopupFactory
+		- PopupData
+		- PopupButtonData
+		- PopupContentData
+
+- Enumerable Extensions
+	- New `Data` script which adds a couple methods to the `Enumerable<T>` class.
+		- `Count` method
+		- `ToArray` method
+
 ### Changed
 ### Removed
+General:
+
+- `UI Data` assembly.
+	- contents are now part of the `Data` assembly.
+
 ### Fixed
 
 ## [v0.0.5] - UI Essentials++ - 28-11-2024

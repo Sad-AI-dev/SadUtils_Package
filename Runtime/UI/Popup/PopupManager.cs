@@ -8,40 +8,40 @@ namespace SadUtils.UI
         public event Action<Popup> OnShowPopup;
         public event Action OnHidePopup;
 
-        [SerializeField] private Transform popupHolder;
-        [SerializeField] private Popup defaultPopupPrefab;
+        [SerializeField] protected Transform popupHolder;
+        [SerializeField] protected Popup defaultPopupPrefab;
 
-        public Popup ActivePopup { get; private set; }
+        protected Popup activePopup;
 
         protected override void Awake()
         {
             SetInstance(this);
         }
 
-        #region Manage Displayed Popup
-        public void DisplayPopup(PopupData data)
+        public void ShowPopup(PopupData data) => ShowPopup(defaultPopupPrefab, data);
+
+        public virtual void ShowPopup(Popup prefab, PopupData data)
         {
-            DisplayPopup(defaultPopupPrefab, data);
+            if (activePopup != null)
+                DestroyActivePopup();
+
+            activePopup = Instantiate(prefab, popupHolder);
+            activePopup.Construct(data);
+
+            OnShowPopup?.Invoke(activePopup);
         }
 
-        public virtual void DisplayPopup(Popup popupPrefab, PopupData data)
+        public void DestroyActivePopup()
         {
-            if (ActivePopup != null)
-                DestroyCurrentPopup();
+            Destroy(activePopup.gameObject);
 
-            ActivePopup = Instantiate(popupPrefab, popupHolder);
-            ActivePopup.Construct(data);
+            OnHidePopup?.Invoke();
         }
 
-        public void DestroyCurrentPopup()
+        public bool TryGetActivePopup(out Popup popup)
         {
-            Destroy(ActivePopup.gameObject);
+            popup = activePopup;
+            return activePopup != null;
         }
-
-        public void DestroyCurrentPopup(float delay)
-        {
-            Destroy(ActivePopup.gameObject, delay);
-        }
-        #endregion
     }
 }
