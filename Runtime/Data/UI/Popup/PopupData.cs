@@ -1,3 +1,5 @@
+using System;
+
 namespace SadUtils.UI
 {
     public struct PopupData
@@ -15,5 +17,8 @@ namespace SadUtils.UI
         // Lifetime
         public bool hasLifeTime;
         public float lifeTime;
+
+        public bool hasLifeTimeResponse;
+        public Action onLifeTimeExpire;
     }
 }

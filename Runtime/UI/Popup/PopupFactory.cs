@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 
 namespace SadUtils.UI
@@ -13,6 +14,9 @@ namespace SadUtils.UI
 
         private bool hasLifeTime;
         private float lifeTime;
+
+        private bool hasLifeTimeResponse;
+        private Action onLifeTimeExpire;
 
         #region Constructor
         public PopupFactory()
@@ -57,10 +61,16 @@ namespace SadUtils.UI
             return AddButtons(buttons.ToArray());
         }
 
-        public PopupFactory AddLifeTime(float lifeTime)
+        public PopupFactory AddLifeTime(float lifeTime, Action onLifeTimeExpire = null)
         {
             hasLifeTime = true;
             this.lifeTime = lifeTime;
+
+            if (onLifeTimeExpire != null)
+            {
+                hasLifeTimeResponse = true;
+                this.onLifeTimeExpire = onLifeTimeExpire;
+            }
 
             return this;
         }
