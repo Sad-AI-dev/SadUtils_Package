@@ -18,7 +18,6 @@ namespace SadUtils
             return array;
         }
 
-        // Identical to System.Linq implementation
         public static int Count<T>(this IEnumerable<T> source)
         {
             if (source is ICollection<T> collection)

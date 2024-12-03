@@ -31,7 +31,7 @@ namespace SadUtils.UI
             OnShowPopup?.Invoke(activePopup);
         }
 
-        public void DestroyActivePopup()
+        public virtual void DestroyActivePopup()
         {
             Destroy(activePopup.gameObject);
 

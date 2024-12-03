@@ -1,6 +1,6 @@
 using System;
 
-namespace SadUtils
+namespace SadUtils.UI
 {
     public abstract class PopupButtonData
     {

@@ -1,4 +1,4 @@
-namespace SadUtils
+namespace SadUtils.UI
 {
     public struct PopupData
     {
