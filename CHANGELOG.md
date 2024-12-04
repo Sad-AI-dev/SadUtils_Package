@@ -2,7 +2,7 @@
 All notable additions, removals, changes and fixes will be documented on this page.  
 The format is based on [this](https://keepachangelog.com/en/1.0.0/) template.
 
-## [v0.0.6] - Popup Update - 00-00-2024
+## [v0.0.6] - Popup Update - 04-12-2024
 
 ### Added
 New scripts:
@@ -22,14 +22,25 @@ New scripts:
 		- `Count` method
 		- `ToArray` method
 
+Documentation:
+
+- Popup System page
+	- A page covering everything related to the new popup system.
+
+- How To: Popup Article
+	- An article discussing how to implement custom behaviour with the popup system.
+
 ### Changed
+Documentation:
+
+- Overhauled home and side bar pages.
+	- Attempted to make pages easier to find and synched the layout of both the pages.
+
 ### Removed
 General:
 
 - `UI Data` assembly.
 	- contents are now part of the `Data` assembly.
-
-### Fixed
 
 ## [v0.0.5] - UI Essentials++ - 28-11-2024
 This update focuses in increasing ease of use for the UI elements introduced in v0.0.4  
